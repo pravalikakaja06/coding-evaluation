@@ -44,6 +44,7 @@ public class MyOrganization extends Organization {
 		myOrg.hire(new Name("Danielle", "Hoover"), "VP Technology");
 		myOrg.hire(new Name("Scape", "Goat"), "VP Infrastructure");
 		myOrg.hire(new Name("Slick", "Willie"), "Salesperson");
+		myOrg.hire(new Name("Pravalika","sample"),"COO");
 		System.out.println(myOrg);
 	}
 }

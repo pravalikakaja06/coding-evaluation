@@ -1,14 +1,10 @@
 package com.aa.act.interview.org;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class Organization {
 
 	private Position root;
-
-	int maxId = 0;
 
 	public Organization() {
 		root = createOrganization();
@@ -24,31 +20,25 @@ public abstract class Organization {
 	 * @return the newly filled position or empty if no position has that title
 	 */
 	public Optional<Position> hire(Name person, String title) {
-		Optional<Position> optTarget = searchPosition(root, title);
-		if (optTarget.isPresent() == false) {
-			return optTarget;
+		Optional<Position> optPosition = searchPosition(root, title);
+		if (!optPosition.isPresent()) {
+			return optPosition;
 		}
-		int nextId = EmployeeCounter.getCounter();
-		Employee emp = new Employee(nextId, person);
-		optTarget.get().setEmployee(Optional.of(emp));
-		return optTarget;
+		optPosition.get().setEmployee(Optional.of(new Employee(EmployeeCounter.getNextEmployeeId(),person)));
+		return optPosition;
 	}
 
 	private Optional<Position> searchPosition(Position root, String title) {
 
 		if (root.getTitle().equalsIgnoreCase(title)) {
-			if (root.getEmployee().isPresent())
-				maxId = Math.max(maxId, root.getEmployee().get().getIdentifier());
 			return Optional.of(root);
 		}
 		for (Position curr : root.getDirectReports()) {
 			Optional<Position> matchedPosition = searchPosition(curr, title);
-			if (matchedPosition.isPresent() && matchedPosition.get().isFilled() == false) {
+			if (matchedPosition.isPresent() && !matchedPosition.get().isFilled()) {
 				return matchedPosition;
 			}
 		}
-
-
 		return Optional.empty();
 	}
 
